@@ -18,11 +18,17 @@ async function printReceipt(data) {
 
         // Content
         printer.alignLeft();
-        printer.setTextSize(0, 0);
+        printer.setTextSize(1, 1);
 
         // Order details
-        printer.println(` ${data.orderId} ${new Date().toLocaleString()}`);
+        printer.print(`${data.orderId}`);
+        printer.setTextSize(0, 0);
+
+        printer.println(` ${new Date().toLocaleString()}`);
+        printer.setTextSize(1, 1);
+
         printer.println(`${data.count} adet >> ${data.weight}gr/${data.purity}`);
+        printer.setTextSize(0, 0);
 
         printer.drawLine(); // Çizgi çiz
 
