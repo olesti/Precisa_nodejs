@@ -6,7 +6,7 @@ const sampleData = {
     count: 2,
     weight: 500,
     purity: "575",
-    timestamp: new Date().toLocaleString()
+   
 };
 
 printReceipt(sampleData)
