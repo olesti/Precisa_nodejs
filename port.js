@@ -9,7 +9,7 @@ const { printReceipt } = require("./print.js");
 const app = express();
 
 app.use(cors());
-const portApp = 5005;
+const portApp = 5000;
 let latestData = "";
 const portName = "COM3";
 const port = new SerialPort({
@@ -74,7 +74,7 @@ app.get("/", (req, res) => {
 
 // Printer'i calistirir
 app.get("/print", (req, res) => {
-  const { orderId, count, weight, purity, timestamp } = req.query;
+  const { orderId, count, weight, purity } = req.query;
 
   if (!orderId || !count || !weight || !purity || !timestamp) {
     return res.status(400).json({
@@ -88,7 +88,7 @@ app.get("/print", (req, res) => {
       count,
       weight,
       purity,
-      timestamp: new Date(parseInt(timestamp)).toLocaleString()
+      timestamp: new Date().toLocaleString()
     };
 
     printReceipt(printData);
