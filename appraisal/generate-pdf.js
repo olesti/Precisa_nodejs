@@ -5,7 +5,7 @@ const puppeteer = require('puppeteer');
 async function generatePdf(preparedForName, appraisalDate, certificateNumber, itemDescription, gemstoneType, caratWeight, centerGemstoneDescription, material, metalColor, totalCaratWeight, estimatedValue, productImageUrl) {
     try {
         // Read the HTML template from file
-        const template = fs.readFileSync('appraisal-template.html', 'utf8');
+        const template = fs.readFileSync('template.html', 'utf8');
 
         // Render the template with the provided data
         const renderedHtml = mustache.render(template, {
