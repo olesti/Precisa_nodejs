@@ -4,6 +4,8 @@ const ReadlineParser = require("@serialport/parser-readline");
 const express = require("express");
 const cors = require("cors");
 const { printReceipt } = require("./print-pos.js");
+const { printAppraisal } = require('./appraisal/print');
+const { getPrinters } = require("pdf-to-printer");
 var bodyParser = require('body-parser')
 
 const app = express();
@@ -53,12 +55,16 @@ app.get("/Weight", (req, res) => {
 
 // Health check endpoint
 app.get("/", (req, res) => {
-  // health check
-  res.status(200).send("Tarti calisiyor");
+  // get printers
+  getPrinters().then((printers) => {
+    res.status(200).send(printers);
+  }).catch((err) => {
+    res.status(500).send(err);
+  });
 });
 
 
-// Printer'i calistirir
+// Receipt Printer'i calistirir
 app.post("/print", async (req, res) => {
   const { orderId, count, weight, purity } = req.body;
   console.log(req.query, req.body, req.params)
@@ -82,6 +88,64 @@ app.post("/print", async (req, res) => {
   } catch (error) {
     console.error("Print error:", error);
     res.status(500).json({ error: "Failed to print receipt" });
+  }
+});
+
+// Appraisal Printer'i calistirir
+app.post("/print-appraisal", async (req, res) => {
+  const {
+    preparedForName,
+    appraisalDate,
+    certificateNumber,
+    itemDescription,
+    gemstoneType,
+    caratWeight,
+    centerGemstoneDescription,
+    material,
+    metalColor,
+    totalCaratWeight,
+    estimatedValue,
+    productImageUrl
+  } = req.body;
+
+  if (
+    !preparedForName ||
+    !appraisalDate ||
+    !certificateNumber ||
+    !itemDescription ||
+    !gemstoneType ||
+    !caratWeight ||
+    !centerGemstoneDescription ||
+    !material ||
+    !metalColor ||
+    !totalCaratWeight ||
+    !estimatedValue ||
+    !productImageUrl
+  ) {
+    return res.status(400).json({ error: "Missing required parameters." });
+  }
+
+  try {
+    // Appraisal printing logic
+    await printAppraisal({
+      preparedForName,
+      appraisalDate,
+      certificateNumber,
+      itemDescription,
+      gemstoneType,
+      caratWeight,
+      centerGemstoneDescription,
+      material,
+      metalColor,
+      totalCaratWeight,
+      estimatedValue,
+      productImageUrl
+    });
+
+    res.status(200).json({ message: "Appraisal printed successfully" });
+  } catch (error) {
+    console.error("Print appraisal error:", error);
+    res.status(500).json({ error: "Failed to print appraisal" });
   }
 });
 
