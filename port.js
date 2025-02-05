@@ -12,7 +12,7 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 app.use(cors());
-const portApp = 5000;
+const portApp = 5001;
 let latestData = "";
 const portName = "COM3";
 const port = new SerialPort({
