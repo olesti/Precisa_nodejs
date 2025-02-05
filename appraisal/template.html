@@ -27,7 +27,7 @@
         body {
             font-family: 'Avenir Medium', sans-serif;
             margin: 0;
-            padding: 30px 44px;
+            padding: 30px 50px;
             display: flex;
             flex-direction: column;
             align-items: stretch;
@@ -62,7 +62,7 @@
 
         .appraisal-info p {
             font-size: 0.9rem;
-            margin-bottom: 2px;
+            margin-bottom: 10px;
         }
 
         /* === Table-like details section === */
@@ -83,27 +83,17 @@
             position: relative;
             z-index: 2;
             background: #fff;
-            display: inline-block;
-            /* ensure it sizes to its content */
-            padding: 0 20px;
-            min-width: 100px;
-            /* ensures the underline is at least 100px wide */
+            padding: 0 50px;
         }
 
         .appraisal-info p .populated.dotted-underline::after {
             content: "";
             position: absolute;
-            left: 0;
-            right: 0;
+            left: -1px;
+            right: -1px;
             bottom: 0;
-            height: 1px;
-            background-image: repeating-linear-gradient(to right,
-                    #000,
-                    #000 1px,
-                    transparent 1px,
-                    transparent 3px);
-            z-index: -1;
-            /* send it behind the text */
+            border-bottom: 1px dotted #ccc;
+            z-index: 1;
         }
 
         /* 
@@ -129,14 +119,9 @@
             left: 0;
             right: 0;
             bottom: 0;
-            height: 1px;
-            background-image: repeating-linear-gradient(to right,
-                    #000,
-                    #000 1px,
-                    transparent 1px,
-                    transparent 3px);
+            border-bottom: 1px dotted #ccc;
+            z-index: 1;
         }
-
 
         .appraisal-details-text p b {
             position: relative;
@@ -197,7 +182,6 @@
 
         .appraisal-details-image img {
             max-width: 100%;
-            margin-top: 2rem;
             height: auto;
         }
 
@@ -382,7 +366,7 @@
         </div>
 
         <div class="signature-section" style="margin-top: 50px;">
-            <img he src="https://www.pngall.com/wp-content/uploads/14/Signature-PNG-File.png" alt="Signature"
+            <img height="70px" src="https://www.pngall.com/wp-content/uploads/14/Signature-PNG-File.png" alt="Signature"
                 class="signature" /><br />
             <p>Emir Selim Öztürk</p>
             <p>Eternate Senior Gemologist</p>
