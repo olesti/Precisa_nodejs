@@ -4,64 +4,73 @@ SETLOCAL EnableDelayedExpansion
 echo Checking if Node.js is installed...
 where node >nul 2>nul
 if %ERRORLEVEL% NEQ 0 (
-    echo Node.js is not installed!
+    echo ERROR: Node.js is not installed!
     echo Please download and install Node.js from https://nodejs.org/
-    echo Press any key to open the download page...
-    pause >nul
+    pause
     start https://nodejs.org/
     exit /b 1
 )
 
 echo Node.js is installed. Version:
 node --version
+if %ERRORLEVEL% NEQ 0 (
+    echo ERROR: Failed to get Node.js version.
+    pause
+    exit /b 1
+)
 
-echo.
 echo Checking if npm is installed...
 where npm >nul 2>nul
 if %ERRORLEVEL% NEQ 0 (
-    echo npm is not installed!
-    echo Please reinstall Node.js which includes npm
+    echo ERROR: npm is not installed!
+    pause
     exit /b 1
 )
 
 echo npm is installed. Version:
-npm --version
+call npm --version
+if %ERRORLEVEL% NEQ 0 (
+    echo ERROR: Failed to get npm version.
+    pause
+    exit /b 1
+)
 
-echo.
 echo Checking for node_modules...
 if not exist "node_modules" (
     echo node_modules not found. Installing dependencies...
     call npm install
     if !ERRORLEVEL! NEQ 0 (
-        echo Failed to install dependencies
-        echo Please try running 'npm install' manually
+        echo ERROR: Failed to install dependencies.
         pause
         exit /b 1
     )
 ) else (
     echo node_modules found. Checking for updates...
     call npm install
+    if !ERRORLEVEL! NEQ 0 (
+        echo ERROR: npm install/update failed.
+        pause
+        exit /b 1
+    )
 )
 
-echo.
 echo Checking if required directories exist...
 if not exist "appraisal\temp" (
-    echo Creating temp directory for appraisals...
+    echo Creating appraisal\temp directory...
     mkdir "appraisal\temp"
+    if %ERRORLEVEL% NEQ 0 (
+        echo ERROR: Failed to create the directory.
+        pause
+        exit /b 1
+    )
 )
 
-echo.
 echo Starting the application...
-echo Press Ctrl+C to stop the server
-echo.
+echo (Press Ctrl+C to stop the server)
 
-npm run start
-
+call npm run start
 if %ERRORLEVEL% NEQ 0 (
-    echo Failed to start the application
-    echo Please check the error message above
+    echo ERROR: Failed to start the application.
     pause
     exit /b 1
 )
-
-pause 
