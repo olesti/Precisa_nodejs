@@ -1,76 +1,74 @@
-// Node.js program to read data from a serial port
+// Node.js program to read data from a serial port and expose printing endpoints
+
+// --- Module Imports ---
 const { SerialPort } = require("serialport");
-const ReadlineParser = require("@serialport/parser-readline");
+const { ReadlineParser } = require("@serialport/parser-readline");
 const express = require("express");
 const cors = require("cors");
+const bodyParser = require("body-parser");
 const { printReceipt } = require("./print-pos.js");
-const { printAppraisal } = require('./appraisal/print');
+const { printAppraisal } = require("./appraisal/print");
 const { getPrinters } = require("pdf-to-printer");
-var bodyParser = require('body-parser')
+const settings = require("./settings.json");
 
+// --- Express App Setup ---
 const app = express();
-app.use(bodyParser.urlencoded({ extended: false }))
-app.use(bodyParser.json())
-app.use(cors());
 const portApp = 5000;
-let latestData = "";
-const portName = "COM3";
-const port = new SerialPort({
-  baudRate: 9600, // Adjust the baud rate as needed
-  autoOpen: true,
-  path: "COM3",
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+app.use(cors());
 
+// --- Serial Port Setup ---
+const serialPortPath = "COM3"; // Adjust if needed
+let latestData = "";
+
+const serialPort = new SerialPort({
+  path: serialPortPath,
+  baudRate: 9600,
+  autoOpen: true,
 });
 
-function extractFirstFloat(str) {
-  const match = str.match(/[-+]?[0-9]*\.?[0-9]+/);
-  return match ? parseFloat(match[0]) : null;
-}
-port.setEncoding("ascii");
+serialPort.setEncoding("ascii");
 
-const parser = port.pipe(new ReadlineParser.ReadlineParser());
-// Listen for data
+const parser = serialPort.pipe(new ReadlineParser());
 parser.on("data", (data) => {
   latestData = data;
 });
-port.on("error", (err) => {
-  console.error(`Error: ${err.message}`);
+
+serialPort.on("error", (err) => {
+  console.error(`Serial port error: ${err.message}`);
 });
 
-port.on("close", () => {
-  console.log("Port closed.");
+serialPort.on("close", () => {
+  console.log("Serial port closed.");
 });
 
+// --- Utility Function ---
+const extractFirstFloat = (str) => {
+  const match = str.match(/[-+]?[0-9]*\.?[0-9]+/);
+  return match ? parseFloat(match[0]) : null;
+};
+
+// --- Endpoints ---
+
+// GET /Weight: Returns weight data (currently returns "0.0" as a placeholder)
 app.get("/Weight", (req, res) => {
-  // res.status(200).send("0.0");
   if (latestData) {
-    const floatNumbers = extractFirstFloat(latestData);
-
-    res.status(200).send("0.0");
-    // res.status(200).send(floatNumbers.toString());
+    const weight = extractFirstFloat(latestData);
+    // To return the actual weight, uncomment the next line:
+    // return res.status(200).send(weight.toString());
+    return res.status(200).send("0.0");
   } else {
-    res.status(500).json({ error: "No data available or not received yet" });
+    return res.status(500).json({ error: "No data available or not received yet" });
   }
 });
 
-// Health check endpoint
-app.get("/", (req, res) => {
-  // get printers
-  getPrinters().then((printers) => {
-    res.status(200).send(printers);
-  }).catch((err) => {
-    res.status(500).send(err);
-  });
-});
-
-
-// Receipt Printer'i calistirir
+// POST /print: Endpoint to print a receipt
 app.post("/print", async (req, res) => {
   const { orderId, count, weight, purity } = req.body;
-  console.log(req.query, req.body, req.params)
   if (!orderId || !count || !weight || !purity) {
     return res.status(400).json({
-      error: "Missing required parameters. Please provide orderId, count, weight, purity, and timestamp"
+      error: "Missing required parameters. Please provide orderId, count, weight, and purity.",
     });
   }
 
@@ -80,75 +78,69 @@ app.post("/print", async (req, res) => {
       count,
       weight,
       purity,
-      timestamp: new Date().toLocaleString()
+      timestamp: new Date().toLocaleString(),
     };
 
     await printReceipt(printData);
-    res.status(200).json({ message: "Print job sent successfully" });
+    return res.status(200).json({ message: "Print job sent successfully" });
   } catch (error) {
     console.error("Print error:", error);
-    res.status(500).json({ error: "Failed to print receipt" });
+    return res.status(500).json({ error: "Failed to print receipt" });
   }
 });
 
-// Appraisal Printer'i calistirir
+// POST /print-appraisal: Endpoint to print an appraisal
 app.post("/print-appraisal", async (req, res) => {
-  const {
-    preparedForName,
-    appraisalDate,
-    certificateNumber,
-    itemDescription,
-    gemstoneType,
-    caratWeight,
-    centerGemstoneDescription,
-    material,
-    metalColor,
-    totalCaratWeight,
-    estimatedValue,
-    productImageUrl
-  } = req.body;
+  // List of required fields for appraisal printing
+  const requiredFields = [
+    "preparedForName",
+    "appraisalDate",
+    "certificateNumber",
+    "itemDescription",
+    "gemstoneType",
+    "caratWeight",
+    "centerGemstoneDescription",
+    "material",
+    "metalColor",
+    "totalCaratWeight",
+    "estimatedValue",
+    "productImageUrl",
+  ];
 
-  if (
-    !preparedForName ||
-    !appraisalDate ||
-    !certificateNumber ||
-    !itemDescription ||
-    !gemstoneType ||
-    !caratWeight ||
-    !centerGemstoneDescription ||
-    !material ||
-    !metalColor ||
-    !totalCaratWeight ||
-    !estimatedValue ||
-    !productImageUrl
-  ) {
-    return res.status(400).json({ error: "Missing required parameters." });
+  // Check if any required field is missing
+  const missingFields = requiredFields.filter(field => !req.body[field]);
+  if (missingFields.length) {
+    return res.status(400).json({
+      error: `Missing required parameter(s): ${missingFields.join(", ")}`
+    });
   }
 
   try {
-    // Appraisal printing logic
-    await printAppraisal({
-      preparedForName,
-      appraisalDate,
-      certificateNumber,
-      itemDescription,
-      gemstoneType,
-      caratWeight,
-      centerGemstoneDescription,
-      material,
-      metalColor,
-      totalCaratWeight,
-      estimatedValue,
-      productImageUrl
-    });
-
-    res.status(200).json({ message: "Appraisal printed successfully" });
+    // The entire req.body is passed assuming it only contains valid appraisal fields
+    await printAppraisal(req.body);
+    return res.status(200).json({ message: "Appraisal printed successfully" });
   } catch (error) {
     console.error("Print appraisal error:", error);
-    res.status(500).json({ error: "Failed to print appraisal" });
+    return res.status(500).json({ error: "Failed to print appraisal" });
   }
 });
 
+// GET /: Health check endpoint that also returns system printer info
+app.get("/", async (req, res) => {
+  let systemPrinters = [];
+  try {
+    systemPrinters = await getPrinters();
+  } catch (error) {
+    console.error("Error getting printers:", error);
+  }
+  return res.status(200).json({
+    systemPrinters,
+    selectedPrinter: settings.AppraisalPrinterName,
+  });
+});
+
+
+// --- Start the Server ---
 app.listen(portApp, () => {
-  console.log(`Example app listening on port ${portApp}`);
+  console.log(`Server is running on port ${portApp}`);
 });
