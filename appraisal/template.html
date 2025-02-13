@@ -7,7 +7,7 @@
     <style>
         @font-face {
             font-family: 'Avenir Medium';
-            src: url('fonts/AVENIR-MEDIUM.ttf') format('woff2');
+            src: url('https://cdn.shopify.com/s/files/1/0484/1429/4167/files/AVENIR-MEDIUM_c1e2fc8f-c4b8-4a76-95f2-52bb23aefd27.TTF?v=1706272671') format('truetype');
             font-weight: normal;
             font-style: normal;
         }
@@ -17,6 +17,28 @@
             src: url('https://cdn.shopify.com/s/files/1/0484/1429/4167/files/Optima-Normal_bfc9578c-e349-42df-be5b-7234fdedb8fd.ttf?v=1701436852') format('truetype');
             font-weight: normal;
             font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'Optima Medium';
+            src: url('https://cdn.shopify.com/s/files/1/0484/1429/4167/files/Optima-Medium.ttf?v=1701436852') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'Optima Roman';
+            src: url('https://cdn.shopify.com/s/files/1/0484/1429/4167/files/Optima_Roman.otf?v=1701263017') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        .font-optima-medium {
+            font-family: 'Optima Medium', sans-serif;
+        }
+
+        .font-optima-roman {
+            font-family: 'Optima Roman', sans-serif;
         }
 
         html {
@@ -33,7 +55,28 @@
             align-items: stretch;
             box-sizing: border-box;
             line-height: 1.4;
+            position: relative;
+            /* Required for absolute positioning of pseudo-element */
         }
+
+        /* Backgorund filigram */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 790px;
+            height: 790px;
+            background-image: url('https://eternate.com/cdn/shop/t/308/assets/newlogo.svg?v=22652848462229378581738917385');
+            background-repeat: no-repeat;
+            background-size: contain;
+            background-position: center;
+            opacity: 0.05;
+            transform: translate(-50%, -53%) rotate(24deg);
+            z-index: 10;
+            pointer-events: none;
+        }
+
 
         a {
             color: #000;
@@ -76,7 +119,6 @@
 
         .appraisal-details-text {
             flex: 2;
-            padding-right: 20px;
         }
 
         .appraisal-info p .populated.dotted-underline {
@@ -86,12 +128,13 @@
             padding: 0 20px 5px 20px;
         }
 
+        /* Burasi sadece isim ve tarih icin */
         .appraisal-info p .populated.dotted-underline::after {
             content: "";
             position: absolute;
             left: -1px;
             right: -1px;
-            bottom: 0;
+            bottom: 3px;
             border-bottom: 1px dotted #000;
             z-index: 1;
         }
@@ -109,12 +152,12 @@
             position: absolute;
             left: 0;
             right: 0;
-            bottom: 0;
+            bottom: 3px;
             border-bottom: 1px dotted #000;
             z-index: 1;
         }
 
-        .appraisal-details-text p b {
+        .appraisal-details-text p span.title {
             position: relative;
             z-index: 2;
             background: #fff;
@@ -132,8 +175,8 @@
         .appraisal-info p .populated.solid-underline {
             position: relative;
             z-index: 2;
-            background: #fff;
             padding: 0 20px;
+            margin-left: 20px;
         }
 
         .appraisal-info p .populated.solid-underline::after {
@@ -142,7 +185,7 @@
             left: -1px;
             right: -1px;
             bottom: 0;
-            border-bottom: 2px solid #000;
+            border-bottom: 1px solid #000;
             z-index: 1;
         }
 
@@ -191,7 +234,7 @@
 
         .footer-bottom {
             margin-top: 40px;
-            font-size: 0.7rem;
+            font-size: 0.68rem;
         }
 
         .signature-section {
@@ -207,6 +250,7 @@
         .signature-section p,
         .address-section p {
             font-size: 0.85rem;
+            line-height: 12px;
         }
 
         .address-section {
@@ -236,43 +280,43 @@
     </div>
 
     <div class="appraisal-info">
-        <p>
+        <p class="font-optima-medium">
             This Retail Value Appraisal was prepared for
-            <b class="populated dotted-underline">{{preparedForName}}</b>
+            <span class="populated dotted-underline">{{preparedForName}}</span>
             on
-            <b class="populated dotted-underline">{{appraisalDate}}</b>
+            <span class="populated dotted-underline">{{appraisalDate}}</span>
         </p>
 
         <div class="appraisal-details-container">
             <div class="appraisal-details-text">
 
                 <p class="center-row">
-                    <b>CERTIFICATE NO:</b>
+                    <span class="title">CERTIFICATE NO:</span>
                     <span class="populated">{{certificateNumber}}</span>
                 </p>
 
                 <p class="center-row">
-                    <b>ITEM:</b>
+                    <span class="title">ITEM:</span>
                     <span class="populated">{{itemDescription}}</span>
                 </p>
                 <p class="center-row">
-                    <b>GEMSTONE:</b>
+                    <span class="title">GEMSTONE:</span>
                     <span class="populated">{{gemstoneType}}</span>
-                    <b>CARAT WEIGHT:</b>
+                    <span class="title">CARAT WEIGHT:</span>
                     <span class="populated">{{caratWeight}}</span>
                 </p>
                 <p class="center-row">
-                    <b>CENTER GEMSTONE:</b>
+                    <span class="title">CENTER GEMSTONE:</span>
                     <span class="populated">{{centerGemstoneDescription}}</span>
                 </p>
                 <p class="center-row">
-                    <b>MATERIAL:</b>
+                    <span class="title">MATERIAL:</span>
                     <span class="populated">{{material}}</span>
-                    <b>METAL COLOR:</b>
+                    <span class="title">METAL COLOR:</span>
                     <span class="populated">{{metalColor}}</span>
                 </p>
                 <p class="center-row">
-                    <b>TOTAL CARAT WEIGHT:</b>
+                    <span class="title">TOTAL CARAT WEIGHT:</span>
                     <span class="populated">{{totalCaratWeight}} </span>
                 </p>
             </div>
@@ -295,7 +339,7 @@
 
     <hr />
 
-    <p class="disclaimer">
+    <p class="disclaimer font-optima-roman">
         The replacement amount above is the actual sale price required to replace the property with another of similar
         type, nature, and quality. This amount is determined by current market conditions and is subject to change
         without notice. The estimated replacement price above is intended for insurance purposes only. The foregoing
@@ -324,7 +368,7 @@
     </div>
 
     <div class="footer-bottom">
-        <p>
+        <p class="font-optima-roman">
             Contact our customer service team at
             <a href="mailto:info@eternate.com">service@eternate.com</a>
             with your order number to have this document in a different format.

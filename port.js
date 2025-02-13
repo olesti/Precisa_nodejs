@@ -19,7 +19,7 @@ app.use(bodyParser.json());
 app.use(cors());
 
 // --- Serial Port Setup ---
-const serialPortPath = "COM3"; // Adjust if needed
+const serialPortPath = "COM3";
 let latestData = "";
 
 const serialPort = new SerialPort({
@@ -51,13 +51,11 @@ const extractFirstFloat = (str) => {
 
 // --- Endpoints ---
 
-// GET /Weight: Returns weight data (currently returns "0.0" as a placeholder)
+// GET /Weight: Returns weight data
 app.get("/Weight", (req, res) => {
   if (latestData) {
     const weight = extractFirstFloat(latestData);
-    // To return the actual weight, uncomment the next line:
-    // return res.status(200).send(weight.toString());
-    return res.status(200).send("0.0");
+    return res.status(200).send(weight.toString());
   } else {
     return res.status(500).json({ error: "No data available or not received yet" });
   }
@@ -116,7 +114,6 @@ app.post("/print-appraisal", async (req, res) => {
   }
 
   try {
-    // The entire req.body is passed assuming it only contains valid appraisal fields
     await printAppraisal(req.body);
     return res.status(200).json({ message: "Appraisal printed successfully" });
   } catch (error) {
