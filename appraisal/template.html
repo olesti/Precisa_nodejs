@@ -47,7 +47,7 @@
         }
 
         body {
-            font-family: 'Avenir Medium', sans-serif;
+            font-family: 'Optima', sans-serif;
             margin: 0;
             padding: 30px 44px;
             display: flex;
@@ -104,15 +104,19 @@
         }
 
         .appraisal-info p {
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             margin-bottom: 8px;
         }
 
         /* === Table-like details section === */
+        .populated {
+            font-family: 'Avenir Medium', sans-serif;
+            font-size: 0.8rem;
+        }
 
         .appraisal-details-container {
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-start;
             align-items: flex-start;
             margin-bottom: 15px;
         }
@@ -161,7 +165,7 @@
             position: relative;
             z-index: 2;
             background: #fff;
-            padding: 0 4px;
+            padding: 0;
             margin-right: 20px;
         }
 
@@ -176,7 +180,7 @@
             position: relative;
             z-index: 2;
             padding: 0 20px;
-            margin-left: 20px;
+            margin-left: 10px;
         }
 
         .appraisal-info p .populated.solid-underline::after {
@@ -202,8 +206,8 @@
         }
 
         .appraisal-details-image {
-            flex: 1;
             text-align: right;
+            margin-left: 12px;
         }
 
         .appraisal-details-image img {
@@ -312,12 +316,14 @@
                 <p class="center-row">
                     <span class="title">MATERIAL:</span>
                     <span class="populated">{{material}}</span>
-                    <span class="title">METAL COLOR:</span>
+                    <span class="title" style="padding-left: 8px;">METAL COLOR:</span>
                     <span class="populated">{{metalColor}}</span>
                 </p>
                 <p class="center-row">
                     <span class="title">TOTAL CARAT WEIGHT:</span>
-                    <span class="populated">{{totalCaratWeight}} </span>
+                    <span class="populated">{{totalCaratWeight}}</span>
+                    <span class="title" style="padding-left: 8px;">ITEM WEIGHT:</span>
+                    <span class="populated">{{itemWeight}}</span>
                 </p>
             </div>
 
@@ -330,9 +336,9 @@
         </div>
 
         <p>
-            <span style="font-style: italic;">ESTIMATED RETAIL VALUE (USD): </span>
+            <span style="font-style: italic;">ESTIMATED RETAIL VALUE (USD): $</span>
             <span class="populated solid-underline">
-                $ {{estimatedValue}} USD
+                {{estimatedValue}} USD
             </span>
         </p>
     </div>
