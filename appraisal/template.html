@@ -13,6 +13,13 @@
         }
 
         @font-face {
+            font-family: 'Avenir Light';
+            src: url('https://cdn.shopify.com/s/files/1/0484/1429/4167/files/AVENIR-LIGHT.TTF?v=1699216138') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        @font-face {
             font-family: 'Optima';
             src: url('https://cdn.shopify.com/s/files/1/0484/1429/4167/files/Optima-Normal_bfc9578c-e349-42df-be5b-7234fdedb8fd.ttf?v=1701436852') format('truetype');
             font-weight: normal;
@@ -49,7 +56,7 @@
         body {
             font-family: 'Optima', sans-serif;
             margin: 0;
-            padding: 30px 44px;
+            padding: 30px 54px;
             display: flex;
             flex-direction: column;
             align-items: stretch;
@@ -110,7 +117,7 @@
 
         /* === Table-like details section === */
         .populated {
-            font-family: 'Avenir Medium', sans-serif;
+            font-family: 'Avenir Light', sans-serif;
             font-size: 0.8rem;
         }
 
@@ -224,8 +231,7 @@
         }
 
         hr {
-            border: 0;
-            border-top: 0px solid #ccc;
+            border-top: 1px solid #000;
             margin: 20px 0;
         }
 
@@ -271,6 +277,7 @@
         .disclaimer {
             font-size: 0.8rem;
             text-align: center;
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -322,8 +329,6 @@
                 <p class="center-row">
                     <span class="title">TOTAL CARAT WEIGHT:</span>
                     <span class="populated">{{totalCaratWeight}}</span>
-                    <span class="title" style="padding-left: 8px;">ITEM WEIGHT:</span>
-                    <span class="populated">{{itemWeight}}</span>
                 </p>
             </div>
 
@@ -355,20 +360,32 @@
 
     <div class="footer">
         <div class="address-section" style="margin-top: 50px;">
-            <img width="105px" style="margin-bottom: 10px;"
+            <svg width="0" height="0">
+                <filter id="grayOverlay">
+                    <feColorMatrix type="matrix" values="0 0 0 0 0.5
+                                                       0 0 0 0 0.5
+                                                       0 0 0 0 0.5
+                                                       0 0 0 1 0" />
+                </filter>
+            </svg>
+
+            <img width="115px" style="margin-bottom: 10px; filter: url(#grayOverlay);"
                 src="https://cdn.shopify.com/s/files/1/0484/1429/4167/files/Logo_v.1.png" alt="Eternate Logo"
                 class="eternate-logo" />
+
+
             <br />
             <p>Eternate</p>
             <p>A Renny New York Inc Brand</p>
-            <p>98 Cuttermill Rd. #5466</p>
-            <p>Great Neck, NY 11021</p>
+            <p>966 West 47th Street #MZ-19</p>
+            <p>New York, NY 10036</p>
         </div>
 
         <div class="signature-section" style="margin-top: 50px;">
-            <img height="70px" src="https://www.pngall.com/wp-content/uploads/14/Signature-PNG-File.png" alt="Signature"
+            <img style="opacity: 0;" height="70px"
+                src="https://www.pngall.com/wp-content/uploads/14/Signature-PNG-File.png" alt="Signature"
                 class="signature" /><br />
-            <p>Emir Selim Öztürk</p>
+            <p>Amir Oz</p>
             <p>Eternate Senior Gemologist</p>
         </div>
     </div>

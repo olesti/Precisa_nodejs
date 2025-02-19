@@ -101,7 +101,6 @@ app.post("/print-appraisal", async (req, res) => {
     "material",
     "metalColor",
     "totalCaratWeight",
-    "itemWeight",
     "estimatedValue",
     "productImageUrl",
   ];
