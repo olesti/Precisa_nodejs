@@ -1,18 +1,17 @@
 // testPrint.js
-const { printReceipt } = require('../print');
+const { printReceipt } = require("../print");
 
 const sampleData = {
-    orderId: "E131231231",
-    count: 2,
-    weight: 500,
-    purity: "575",
-   
+  orderId: "E131231231",
+  count: 2,
+  weight: 500,
+  purity: "575",
 };
 
 printReceipt(sampleData)
-    .then(result => {
-        console.log("Receipt printed successfully:", result);
-    })
-    .catch(error => {
-        console.error("Failed to print receipt:", error);
-    });
+  .then((result) => {
+    console.log("Receipt printed successfully:", result);
+  })
+  .catch((error) => {
+    console.error("Failed to print receipt:", error);
+  });

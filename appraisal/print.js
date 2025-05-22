@@ -1,3 +1,6 @@
+const fs=require("fs")
+const generatePdf=require("./generate-pdf")
+const settings=require("../settings.json")
 async function printAppraisal(data) {
     // Validate printer settings
     if (!settings.AppraisalPrinterName) {
@@ -78,3 +81,4 @@ async function printAppraisal(data) {
         }
     }
 }
+module.exports={printAppraisal}
