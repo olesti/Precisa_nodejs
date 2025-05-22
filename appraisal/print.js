@@ -1,6 +1,7 @@
 const fs=require("fs")
 const generatePdf=require("./generate-pdf")
-const settings=require("../settings.json")
+const settings=require("../settings.json");
+const { print } = require("pdf-to-printer");
 async function printAppraisal(data) {
     // Validate printer settings
     if (!settings.AppraisalPrinterName) {
