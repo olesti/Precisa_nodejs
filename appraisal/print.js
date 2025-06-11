@@ -66,7 +66,8 @@ async function printAppraisal(data) {
             pdfPath: pdfPath || 'Not generated'
         });
         throw err;
-    } finally {
+    } 
+   /*  finally {
         // settings.json'da debug modu false ise pdf dosyası silinir.
         if (pdfPath && fs.existsSync(pdfPath)) {
             if (!settings.debug) {
@@ -80,6 +81,6 @@ async function printAppraisal(data) {
                 console.log('Debug mode enabled; temporary PDF file retained at', pdfPath);
             }
         }
-    }
+    } */
 }
 module.exports={printAppraisal}
